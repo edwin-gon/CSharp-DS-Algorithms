@@ -29,17 +29,31 @@ namespace structures.linkedList.tests
         }
 
         [Theory]
-        [InlineData(new int[] { })]
-        [InlineData(new int[] { 1 })]
-        public void AddValueToHead(int[] values)
+        [InlineData(new int[] { }, 2, 2)]
+        [InlineData(new int[] { 1 }, 2, 1)]
+        public void AddValueToHead(int[] values, int expectedHead, int expectedTail)
         {
             var testList = new SinglyLinkedList<int>();
             foreach (var item in values)
                 testList.Add(item);
 
-            var valueToBeAdded = 2;
-            testList.InsertAtHead(valueToBeAdded);
-            Assert.Equal(valueToBeAdded, testList.GetHead().Value);
+            testList.InsertAtHead(expectedHead);
+            Assert.Equal(expectedHead, testList.GetHead().Value);
+            Assert.Equal(expectedTail, testList.GetTail().Value);
+        }
+
+        [Theory]
+        [InlineData(new int[] { }, 2, 2)]
+        [InlineData(new int[] { 1 }, 2, 1)]
+        public void AddValueToTail(int[] values, int expectedTail, int expectedHead)
+        {
+            var testList = new SinglyLinkedList<int>();
+            foreach (var item in values)
+                testList.Add(item);
+
+            testList.InsertAtTail(expectedTail);
+            Assert.Equal(expectedHead, testList.GetHead().Value);
+            Assert.Equal(expectedTail, testList.GetTail().Value);
         }
 
         [Theory]

@@ -25,11 +25,31 @@ namespace structures.linkedLists
             if (_Head == null)
             {
                 _Head = new Node<T>(value, null);
+                _Tail = _Head;
                 return;
             }
 
             var newHead = new Node<T>(value, _Head);
             _Head = newHead;
+        }
+        public void InsertAtTail(T value)
+        {
+            var newTail = new Node<T>(value, null);
+
+            if (_Tail == null)
+            {
+                _Tail = newTail;
+                _Head = _Tail;
+                return;
+            }
+
+            var current = _Head;
+            while (current.NextNode != null)
+            {
+                current = current.NextNode;
+            }
+            current.NextNode = newTail;
+            _Tail = newTail;
         }
         public void DeleteAtHead()
         {
