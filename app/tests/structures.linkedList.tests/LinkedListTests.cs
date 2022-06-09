@@ -1,21 +1,20 @@
-using System;
 using structures.linkedLists;
 using Xunit;
 
 namespace structures.linkedList.tests
 {
-    public class LinkedListTest
+    public class SinglyLinkedListTest
     {
         [Fact]
         public void CreateList()
         {
             var linkedList = new SinglyLinkedList<int>();
 
-            Assert.Null(linkedList.Head);
+            Assert.Null(linkedList.GetHead());
         }
 
         [Fact]
-        public void InsertValues()
+        public void AddValues()
         {
             var headValue = 1;
             var tailValue = 2;
@@ -24,9 +23,36 @@ namespace structures.linkedList.tests
             linkedList.Add(headValue);
             linkedList.Add(tailValue);
 
-            Assert.Equal(linkedList.Head.Value, headValue);
-            Assert.Equal(linkedList.Head.NextNode.Value, tailValue);
-            Assert.Null(linkedList.Head.NextNode.NextNode);
+            Assert.Equal(linkedList.GetHead().Value, headValue);
+            Assert.Equal(linkedList.GetHead().NextNode.Value, tailValue);
+            Assert.Null(linkedList.GetHead().NextNode.NextNode);
+        }
+
+        [Theory]
+        [InlineData(new int[] { })]
+        [InlineData(new int[] { 1 })]
+        public void AddValueToHead(int[] values)
+        {
+            var testList = new SinglyLinkedList<int>();
+            foreach (var item in values)
+                testList.Add(item);
+
+            var valueToBeAdded = 2;
+            testList.InsertAtHead(valueToBeAdded);
+            Assert.Equal(valueToBeAdded, testList.GetHead().Value);
+        }
+
+        [Theory]
+        [InlineData(new int[] { })]
+        [InlineData(new int[] { 1 })]
+        public void RemoveValueToHead(int[] values)
+        {
+            var testList = new SinglyLinkedList<int>();
+            foreach (var item in values)
+                testList.Add(item);
+
+            testList.DeleteAtHead();
+            Assert.Null(testList.GetHead());
         }
 
         [Theory]
@@ -72,7 +98,7 @@ namespace structures.linkedList.tests
             foreach (var value in testValues)
                 linkedList.Add(value);
 
-            linkedList.Remove(valueToRemove);
+            linkedList.Delete(valueToRemove);
             Assert.False(linkedList.Contains(valueToRemove));
             Assert.Equal(expectedCount, linkedList.Count());
         }
@@ -88,9 +114,42 @@ namespace structures.linkedList.tests
             foreach (var value in testValues)
                 testList.Add(value);
 
-            testList.Remove(valueToRemove);
+            testList.Delete(valueToRemove);
             Assert.False(testList.Contains(valueToRemove));
             Assert.Equal(expectedCount, testList.Count());
+        }
+        [Theory]
+        [InlineData(new int[] { 1, 2, 3 }, 3, 2, 2)]
+        [InlineData(new int[] { 1, 1, 1 }, 1, 0, 0)]
+        [InlineData(new int[] { }, 1, 0, 0)]
+        public void RemoveValuesTail(
+            int[] testValues,
+            int valueToRemove,
+            int expectedCount,
+            int expectedTail)
+        {
+            var testList = new SinglyLinkedList<int>();
+
+            foreach (var value in testValues)
+                testList.Add(value);
+
+            testList.Delete(valueToRemove);
+            Assert.False(testList.Contains(valueToRemove));
+            Assert.Equal(expectedCount, testList.Count());
+            Assert.Equal(expectedTail, testList.GetTail()?.Value ?? 0);
+        }
+
+        [Theory]
+        [InlineData(new int[] { }, true)]
+        [InlineData(new int[] { 1 }, false)]
+        public void IsEmpty(int[] values, bool expectedResult)
+        {
+            var testList = new SinglyLinkedList<int>();
+            foreach (var item in values)
+                testList.Add(item);
+
+            var result = testList.IsEmpty();
+            Assert.Equal(expectedResult, result);
         }
     }
 }
