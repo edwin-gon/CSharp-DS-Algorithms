@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 
 namespace structures.linkedLists
@@ -8,29 +6,51 @@ namespace structures.linkedLists
     public class SinglyLinkedList<T> where T : IEquatable<T>
     {
         private Node<T> _Head;
-
-        public Node<T> Head
-        {
-            get { return _Head; }
-        }
-
+        private Node<T> _Tail;
         public SinglyLinkedList()
         {
             _Head = null;
+            _Tail = null;
         }
+        public Node<T> GetHead()
+        {
+            return _Head;
+        }
+        public Node<T> GetTail()
+        {
+            return _Tail;
+        }
+        public void InsertAtHead(T value)
+        {
+            if (_Head == null)
+            {
+                _Head = new Node<T>(value, null);
+                return;
+            }
+
+            var newHead = new Node<T>(value, _Head);
+            _Head = newHead;
+        }
+        public void DeleteAtHead()
+        {
+            if (_Head == null) return;
+            var newHead = _Head.NextNode;
+            _Head = newHead;
+        }
+
         public void Add(T value)
         {
-            var pendingNode = new Node<T>(value, null);
             /* Conditions:
             1) When no nodes exist in the structure.
             2) Appending a node, when nodes exist - append to the _Tail and update to point to new _Tail
             */
             if (_Head == null)
             {
-                _Head = pendingNode;
+                InsertAtHead(value);
                 return;
             }
 
+            var pendingNode = new Node<T>(value, null);
             var currentNode = _Head;
             while (true)
             {
@@ -45,7 +65,6 @@ namespace structures.linkedLists
 
         public bool Contains(T value)
         {
-            // Could you simply inspect _Head and _Tail first and then inspect the rest?
             var currentNode = _Head;
             while (currentNode != null)
             {
@@ -57,13 +76,8 @@ namespace structures.linkedLists
             }
             return false;
         }
-        /* a-b-c-b-d 
-        - Remove a => b-c-d | b points to head 
-        - Remove c => a-b-b-d | b next points to deleted node next
-        - Remove d => a-b-c-b | delete node and do not update next
-        - Remove b => a-c-d | update a to c and c to d 
-        */
-        public void Remove(T value)
+
+        public void Delete(T value)
         {
             Node<T> previous, current = null;
             current = _Head;
@@ -97,12 +111,18 @@ namespace structures.linkedLists
                     }
                     current = current.NextNode;
                 }
+                if (previous.Value.Equals(value))
+                    _Tail = null;
+                else
+                    _Tail = previous;
             }
         }
+
         public bool IsEmpty()
         {
             return _Head == null;
         }
+
         public int Count()
         {
             int count = 0;
