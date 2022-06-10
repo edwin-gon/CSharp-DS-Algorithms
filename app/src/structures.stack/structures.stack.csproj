@@ -4,4 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\structures.linkedLists\structures.linkedLists.csproj" />
+  </ItemGroup>
 </Project>
