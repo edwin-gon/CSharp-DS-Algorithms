@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -29,6 +30,21 @@ namespace algorithms.sorting.tests
             Assert.Equal(expected, result);
         }
 
+        [Theory]
+        [MemberData(nameof(Data))]
+        public void QuickSort(int[] unsorted, int[] expected)
+        {
+            var result = Sort.QuickSort(unsorted, 0, unsorted.Length - 1);
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(Data))]
+        public void MergeSort(int[] unsorted, int[] expected)
+        {
+            var result = Sort.MergeSort(unsorted);
+            Assert.Equal(expected, result);
+        }
         public static IEnumerable<object[]> Data =>
             new List<object[]>
             {
