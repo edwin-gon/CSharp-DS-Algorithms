@@ -57,6 +57,108 @@
             }
             return collection;
         }
+        public static int[] QuickSort(int[] collection, int left, int right)
+        {
+            // Set first element as a pivot and on the left find the smallest item on the right hand side and largest on the left hand side
+            // Once found swap pivot with the smallest value and right most value and pick next item and repeat process from the left neighbour of the pivot and repeat
+            // with right neighbor
+
+            // Find the partition and then sort the left and right array
+
+            var index = Partition(collection, left, right);
+            if (left < index - 1)
+            {
+                QuickSort(collection, left, index - 1);
+            }
+            if (right > index)
+            {
+                QuickSort(collection, index, right);
+            }
+
+            return collection;
+        }
+        public static int[] MergeSort(int[] collection)
+        {
+            // Recursively sort array by doing sorting by piece by piece 
+            // Lastly, once sorted merge the values
+            if (collection.Length == 1 || collection.Length == 0) return collection;
+
+            var partition = (0 + collection.Length - 1) / 2;
+            // Split array and sort each 
+            var arr1 = Split(collection, 0, partition);
+            var arr2 = Split(collection, partition + 1, collection.Length - 1);
+
+            arr1 = MergeSort(arr1);
+            arr2 = MergeSort(arr2);
+            return Merge(arr1, arr2);
+        }
+        private static int[] Merge(int[] arr1, int[] arr2)
+        {
+            int i = 0;
+            int j = 0;
+            int[] result = new int[arr1.Length + arr2.Length];
+
+            while (i <= arr1.Length - 1 && j <= arr2.Length - 1)
+            {
+                if (arr1[i] <= arr2[j])
+                {
+                    result[i + j] = arr1[i];
+                    i++;
+                }
+                else if (arr1[i] > arr2[j])
+                {
+                    result[i + j] = arr2[j];
+                    j++;
+                }
+            }
+
+            if (i > arr1.Length - 1)
+            {
+                for (; j < arr2.Length; j++)
+                {
+                    result[i + j] = arr2[j];
+                }
+            }
+            else
+            {
+                for (; i < arr1.Length; i++)
+                {
+                    result[i + j] = arr1[i];
+                }
+            }
+
+            return result;
+        }
+        private static int[] Split(int[] arr, int start, int end)
+        {
+            int[] result = new int[end - start + 1]; // 0,1 => 2 elements, // 1,2 => 2 elements
+            int index = 0;
+
+            for (int i = start; i <= end; i++)
+            {
+                result[index] = arr[i];
+                index++;
+            }
+
+            return result;
+        }
+        private static int Partition(int[] collection, int left, int right)
+        {
+            var pivot = collection[(left + right) / 2];
+            while (left <= right)
+            {
+                while (collection[left] < pivot) left++;
+                while (collection[right] > pivot) right--;
+
+                if (left <= right)
+                {
+                    Swap(collection, left, right);
+                    left++;
+                    right--;
+                }
+            }
+            return left;
+        }
         private static void Swap(int[] collection, int indexOne, int indexTwo)
         {
             int temp = collection[indexOne];
